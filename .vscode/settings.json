@@ -1,5 +1,8 @@
 {
   "cSpell.words": [
-    "todos"
+    "addtodo",
+    "removetodo",
+    "todos",
+    "toggletodo"
   ]
 }
