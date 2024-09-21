@@ -2,7 +2,8 @@
   import TodoList from "./lib/TodoList.svelte";
   import { v4 as uuid } from "uuid";
   import { tick, onMount } from "svelte";
-  // import { identity } from 'svelte/internal';
+  import { fly } from "svelte/transition";
+  import fade from "./lib/transitions/fade";
 
   let todoList: any;
   let showList = true;
@@ -46,7 +47,7 @@
     }).then(async (response) => {
       if (response.ok) {
         const todo = await response.json();
-        todos = [...todos, { ...todo, id: uuid() }];
+        todos = [{ ...todo, id: uuid() }, ...todos];
         todoList.clearInput();
       } else {
         alert("An error has occurred.");
@@ -109,7 +110,11 @@
   Show/Hide list
 </label>
 {#if showList}
-  <div style:max-width="400px">
+  <div
+    transition:fade={{ duration: 1000 }}
+    style="opacity:0.5 transform: rotate(90deg)"
+    style:max-width="800px"
+  >
     <TodoList
       {todos}
       {error}
@@ -120,6 +125,7 @@
       on:addtodo={handleAddTodo}
       on:removetodo={handleRemoveTodo}
       on:toggletodo={handleToggleTodo}
+      scrollOnAdd="top"
     >
       <!-- <svelte:fragment slot="title">{index + 1}- {todo.title}</svelte:fragment> -->
       <!-- {@const { id, completed, title } = todo} -->
@@ -138,6 +144,15 @@
       </div> -->
     </TodoList>
   </div>
+  {#if todos}
+    <p>
+      Number of todos: {#key todos.length}
+        <span style:display="inline-block" in:fly|local={{ y: -10 }}>
+          {todos.length}
+        </span>
+      {/key}
+    </p>
+  {/if}
 {/if}
 
 <style>
