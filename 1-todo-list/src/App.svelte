@@ -4,6 +4,10 @@
   import { tick, onMount } from "svelte";
   import { fly } from "svelte/transition";
   import fade from "./lib/transitions/fade";
+  import longpress from "./lib/actions/longpress";
+  import tippy from "./lib/actions/tippy";
+  // import tippy from "tippy.js";
+  // import "tippy.js/dist/tippy.css";
 
   let todoList: any;
   let showList = true;
@@ -103,6 +107,21 @@
 
     disabledItems = disabledItems.filter((itemId: any) => itemId !== id);
   }
+
+  // Actions
+  let showButton = true;
+  let duration = 3000;
+
+  // Tippy
+
+  // let button: any;
+
+  // onMount(() => {
+  //   tippy(".tooltip", { content: "A demo tool tip" });
+  //   tippy(button, { content: "Another One" });
+  // });
+
+  let content = "Hello";
 </script>
 
 <label>
@@ -154,6 +173,37 @@
     </p>
   {/if}
 {/if}
+
+<h3>Actions: Longpress custom event</h3>
+
+<label>
+  <input type="range" bind:value={duration} max={4000} step={100} />{duration} ms
+</label>
+
+<label><input type="checkbox" bind:checked={showButton} />Show Button</label>
+
+{#if showButton}
+  <button
+    use:longpress={{ duration }}
+    on:longpress={() => {
+      alert("Pressed long");
+    }}>Button</button
+  >
+{/if}
+
+<h3>Actions: Tippy</h3>
+
+<!-- <button class="tooltip">Button</button>
+<button class="tooltip" data-tippy-content="Other demo text">Button</button>
+
+<button bind:this={button}>Button</button> -->
+
+<input bind:value={content}>
+
+<button
+  use:tippy={{ content, placement: "right", theme: "light" }}
+  >Button</button
+>
 
 <style>
 </style>
